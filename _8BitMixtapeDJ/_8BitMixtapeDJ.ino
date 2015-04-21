@@ -11,32 +11,13 @@
 
 #include "sequencer_lib.h"
 
-
-#define STEP_COUNT 8
-
-//const uint8_t NUMBER_OF_STEPS = STEP_COUNT - 1;
-//volatile uint8_t CURRENT_STEP_INDEX = 0;
-
-//uint8_t stepFreqs[]    = {  10,  255, 10,255, 10,  255, 10,255};
-//uint8_t stepSustains[] = {100,100,100,100,100,100,100,100};
-
-//volatile uint16_t timer0_tempo_interval = 0;
-//volatile uint16_t timer0_sustain_interval = 0;
-//volatile uint16_t timer0_duration_millis = 0;
-
-//uint8_t first_start = 1;
-
-
-//uint8_t pwm_fade = 0;
-
-//volatile uint64_t t; // this will affect sound quality
-//volatile uint16_t song_interval = 0;
-unsigned long slower_interval = 0;
-
 #define T_START 0
 
+unsigned long slower_interval = 0;
 
 volatile unsigned long t = T_START; // long
+//volatile uint64_t t; // this will affect sound quality
+//volatile uint16_t song_interval = 0;
 
 //volatile unsigned long t_delay; // long
 //volatile unsigned long u; // long
@@ -49,6 +30,27 @@ volatile uint8_t adc2 = _BV(ADLAR) | _BV(MUX1); //PB4-ADC2 pot1
 volatile uint8_t pot1; // 0...255
 volatile uint8_t pot2; // 0...255
 
+#define SEQUENCER1_LENGTH 8
+
+seq_sequence sequencer1_sequence[SEQUENCER1_LENGTH] =
+{
+    //sustain, freq
+    { 4000, 20},
+    { 1000, 200},
+    { 4000, 20},
+    { 1000, 200},
+    { 1000, 200},
+    { 1000, 200},
+    { 1000, 200},
+    { 1000, 200},
+};
+
+seq_instance sequencer1;
+
+void setupSequencer()
+{
+    seq_init(&sequencer1, sequencer1_sequence, SEQUENCER1_LENGTH, 10000);
+}
 
 void setupOutputPin()
 {
@@ -117,9 +119,9 @@ void setupTimer0PWM()
 //    TCCR0A |= (1<<COM0A1); //Clear OC0A/OC0B on Compare Match when up-counting.
 //    TCCR0B |= (1<<CS00);//no prescale
 
-     //from ref website, this enable OCR0B
-     TCCR0A = 2<<COM0A0 | 2<<COM0B0 | 3<<WGM00;
-     TCCR0B = 0<<WGM02 | 1<<CS00;
+    //from ref website, this enable OCR0B
+    TCCR0A = 2<<COM0A0 | 2<<COM0B0 | 3<<WGM00;
+    TCCR0B = 0<<WGM02 | 1<<CS00;
 }
 
 void adc_init()
@@ -137,11 +139,7 @@ void adc_start()
     ADCSRA |= _BV(ADSC); //start adc conversion
 }
 
-void setupSequencer()
-{
-    seq_set_tempo(5000);
-    seq_set_current_step(0);
-}
+
 
 int main(void)
 {
@@ -161,7 +159,7 @@ int main(void)
     //enable timer 0
     //enableTimer0PWM();
 
-    //adc_init();
+    adc_init();
 
     setupSequencer();
 
@@ -219,20 +217,20 @@ int main(void)
 //        }
 
     while(1)
-    {
-        /*
-        uint8_t btn1_now = button_is_pressed(PINB, PB1);
-        if ( btn1_previous != btn1_now && btn1_now == 1 ) {
-            songs++;
-            if (songs > 3) songs = 0;
-            btn1_previous = btn1_now;
-        }else{
-            btn1_previous = btn1_now;
+        {
+            /*
+            uint8_t btn1_now = button_is_pressed(PINB, PB1);
+            if ( btn1_previous != btn1_now && btn1_now == 1 ) {
+                songs++;
+                if (songs > 3) songs = 0;
+                btn1_previous = btn1_now;
+            }else{
+                btn1_previous = btn1_now;
+            }
+            */
+
+
         }
-        */
-
-
-    }
 
     return 0;   /* never reached */
 }
@@ -309,12 +307,14 @@ ISR(TIMER1_COMPA_vect)
 //        //snd = t*(((t>>9)^((t>>9)-(1+(44/2)))^1)%(13+(12/2)));
 
 
-        if(sound_generator_on > 0)
+    if(sequencer1.sound_generator_on > 0)
         {
             snd = (t*(5+(12/5))&t>>7)|(t*3&t>>(10-(8/5)));
             OCR0A = snd;
             t++;
-        }else{
+        }
+    else
+        {
             OCR0A = 0;
             t = 0;
         }
@@ -326,7 +326,7 @@ ISR(TIMER1_COMPA_vect)
 //    }
 
 
-    seq_update_state();
+    seq_update(&sequencer1);
 
 //    //15625 = 1 sec
 //    //7812 = 0.5 sec
@@ -366,13 +366,15 @@ ISR(ADC_vect)
 
     if (firstTime == 1)
         firstTime = 0;
-    else if (ADMUX  == adc1) {
-        pot1 = val;
-        ADMUX = adc2;
-    }
-    else if ( ADMUX == adc2) {
-        pot2  = val;
-        ADMUX = adc1;
-    }
+    else if (ADMUX  == adc1)
+        {
+            pot1 = val;
+            ADMUX = adc2;
+        }
+    else if ( ADMUX == adc2)
+        {
+            pot2  = val;
+            ADMUX = adc1;
+        }
 
 }

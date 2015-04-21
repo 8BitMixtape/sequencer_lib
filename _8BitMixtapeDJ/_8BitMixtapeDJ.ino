@@ -54,8 +54,8 @@ void setupSequencer()
 
 void setupOutputPin()
 {
-    DDRB |= 1<<DDB4; //set PB4 as output
-    PORTB &= ~(1 << PB4); //set PB4 output 0
+    //DDRB |= 1<<DDB4; //set PB4 as output
+    //PORTB &= ~(1 << PB4); //set PB4 output 0
 
     DDRB |= 1<<DDB1; //set PB1 as output
     PORTB &= ~(1 << PB1); //set PB1 output 0
@@ -165,7 +165,7 @@ int main(void)
 
     sei(); //enable global interrupt
 
-    //adc_start();
+    adc_start();
 
 //    /* endless loop */
 //    for(;;)
@@ -278,15 +278,14 @@ ISR(TIMER1_COMPA_vect)
     //slower_interval++;
 
 
-//    cli();
-//    uint8_t rate = pot1;
-//    uint8_t pot2_val = pot2;
+   //cli();
+       uint8_t pot1_val = pot1;
+       uint8_t pot2_val = pot2;
+       //if(pot1_val< 10 ) pot1_val = 10;
+       if(pot2_val< 10 ) pot2_val = 10;
+   //sei();
 
-//    if(pot2_val< 10 ) pot2_val = 10;
-
-//    //OCR1C = pot2_val;
-//    sei();
-
+   //seq_set_tempo(&sequencer1,rate << 6);
 
 
 //    if(pot2_val >= 127)
@@ -299,7 +298,7 @@ ISR(TIMER1_COMPA_vect)
 //    }
 
 
-//    if(slower_interval >= rate)
+//    if(slower_interval >= pot1_val)
 //    {
 //        //play song
 
@@ -307,9 +306,14 @@ ISR(TIMER1_COMPA_vect)
 //        //snd = t*(((t>>9)^((t>>9)-(1+(44/2)))^1)%(13+(12/2)));
 
 
+//       snd = t*(((t>>(11-(pot2_val/2)))&(t>>8))&((123-20)&(t>>3)));
+//   OCR0A = snd;
+//   t++;
+
     if(sequencer1.sound_generator_on > 0)
         {
-            snd = (t*(5+(12/5))&t>>7)|(t*3&t>>(10-(8/5)));
+//            snd = (t*(5+(pot1_val/5))&t>>7)|(t*3&t>>(10-(8/5)));
+            snd = t*(((t>>(11-(pot2_val/2)))&(t>>8))&((123-20)&(t>>3)));
             OCR0A = snd;
             t++;
         }

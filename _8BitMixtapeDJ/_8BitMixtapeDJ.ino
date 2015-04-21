@@ -9,6 +9,9 @@
 #include <avr/interrupt.h>
 #include <avr/power.h>
 
+#include "sequencer_lib.h"
+
+
 #define STEP_COUNT 8
 
 //const uint8_t NUMBER_OF_STEPS = STEP_COUNT - 1;
@@ -30,10 +33,14 @@
 //volatile uint16_t song_interval = 0;
 unsigned long slower_interval = 0;
 
-volatile unsigned long t; // long
-volatile unsigned long t_delay; // long
+#define T_START 10000
 
-volatile unsigned long u; // long
+
+volatile unsigned long t = T_START; // long
+
+//volatile unsigned long t_delay; // long
+//volatile unsigned long u; // long
+
 volatile uint8_t snd; // 0...255
 volatile uint8_t snd2; // 0...255
 
@@ -41,6 +48,7 @@ volatile uint8_t adc1 = _BV(ADLAR) | _BV(MUX0); //PB2-ADC1 pot2
 volatile uint8_t adc2 = _BV(ADLAR) | _BV(MUX1); //PB4-ADC2 pot1
 volatile uint8_t pot1; // 0...255
 volatile uint8_t pot2; // 0...255
+
 
 void setupOutputPin()
 {
@@ -129,6 +137,12 @@ void adc_start()
     ADCSRA |= _BV(ADSC); //start adc conversion
 }
 
+void setupSequencer()
+{
+    seq_set_tempo(10000);
+    seq_set_current_step(0);
+}
+
 int main(void)
 {
     clock_prescale_set(clock_div_1);
@@ -148,6 +162,8 @@ int main(void)
     //enableTimer0PWM();
 
     adc_init();
+
+    setupSequencer();
 
     sei(); //enable global interrupt
 
@@ -263,6 +279,7 @@ ISR(TIMER1_COMPA_vect)
 
     slower_interval++;
 
+
     cli();
     uint8_t rate = pot1;
     uint8_t pot2_val = pot2;
@@ -293,12 +310,23 @@ ISR(TIMER1_COMPA_vect)
         //snd = t*(((t>>9)^((t>>9)-(1+(44/2)))^1)%(13+(12/2)));
 
 
-        OCR0A = snd;
-        OCR0B = (snd/2) + (snd2/2);
+        if(sound_generator_on)
+        {
+            OCR0A = snd;
+        }else{
+            OCR0A = 0;
+            t = T_START;
+        }
+
+        //OCR0B = (snd/2) + (snd2/2);
 
         t++;
         slower_interval = 0;
+
     }
+
+
+    seq_update_state();
 
 //    //15625 = 1 sec
 //    //7812 = 0.5 sec

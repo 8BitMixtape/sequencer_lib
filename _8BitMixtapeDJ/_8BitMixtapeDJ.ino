@@ -33,7 +33,7 @@
 //volatile uint16_t song_interval = 0;
 unsigned long slower_interval = 0;
 
-#define T_START 10000
+#define T_START 0
 
 
 volatile unsigned long t = T_START; // long
@@ -139,7 +139,7 @@ void adc_start()
 
 void setupSequencer()
 {
-    seq_set_tempo(10000);
+    seq_set_tempo(5000);
     seq_set_current_step(0);
 }
 
@@ -161,13 +161,13 @@ int main(void)
     //enable timer 0
     //enableTimer0PWM();
 
-    adc_init();
+    //adc_init();
 
     setupSequencer();
 
     sei(); //enable global interrupt
 
-    adc_start();
+    //adc_start();
 
 //    /* endless loop */
 //    for(;;)
@@ -277,17 +277,17 @@ ISR(TIMER1_COMPB_vect)
 ISR(TIMER1_COMPA_vect)
 {
 
-    slower_interval++;
+    //slower_interval++;
 
 
-    cli();
-    uint8_t rate = pot1;
-    uint8_t pot2_val = pot2;
+//    cli();
+//    uint8_t rate = pot1;
+//    uint8_t pot2_val = pot2;
 
-    if(pot2_val< 10 ) pot2_val = 10;
+//    if(pot2_val< 10 ) pot2_val = 10;
 
-    //OCR1C = pot2_val;
-    sei();
+//    //OCR1C = pot2_val;
+//    sei();
 
 
 
@@ -301,29 +301,29 @@ ISR(TIMER1_COMPA_vect)
 //    }
 
 
-    if(slower_interval >= rate)
-    {
-        //play song
-        snd = (t|(t>>(9+(10/2))|t>>7))*t&(t>>(11+(20/2))|t>>9);
+//    if(slower_interval >= rate)
+//    {
+//        //play song
 
-        snd2 = (t*(5+(40/5))&t>>7)|(t*3&t>>(10-(8/5)));
-        //snd = t*(((t>>9)^((t>>9)-(1+(44/2)))^1)%(13+(12/2)));
+//        //snd2 = (t*(5+(40/5))&t>>7)|(t*3&t>>(10-(8/5)));
+//        //snd = t*(((t>>9)^((t>>9)-(1+(44/2)))^1)%(13+(12/2)));
 
 
-        if(sound_generator_on)
+        if(sound_generator_on > 0)
         {
+            snd = (t*(5+(12/5))&t>>7)|(t*3&t>>(10-(8/5)));
             OCR0A = snd;
+            t++;
         }else{
             OCR0A = 0;
-            t = T_START;
+            t = 0;
         }
 
-        //OCR0B = (snd/2) + (snd2/2);
+//        //OCR0B = (snd/2) + (snd2/2);
 
-        t++;
-        slower_interval = 0;
+//        slower_interval = 0;
 
-    }
+//    }
 
 
     seq_update_state();

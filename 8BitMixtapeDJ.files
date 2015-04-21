@@ -1,2 +1,3 @@
 build/Makefile
 _8BitMixtapeDJ/_8BitMixtapeDJ.ino
+_8BitMixtapeDJ/sequencer_lib.h

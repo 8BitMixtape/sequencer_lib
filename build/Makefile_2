@@ -23,8 +23,7 @@ CLOCK		= 16500000
 
 #PROGRAMMER
 PROGRAMMER	= stk500v1
-#SERIAL_DEVICE = /dev/cu.usbserial-A60062Vz
-SERIAL_DEVICE   =  /dev/cu.usbserial-A5029U9R
+SERIAL_DEVICE = /dev/cu.usbserial-A5029U9R
 BAUDRATE	= 19200
 
 # For computing fuse byte values for other devices and options see
@@ -44,51 +43,48 @@ AVRDUDE = $(AVRBIN)/avrdude $(AVRDUDE_PROGRAMMER) -p $(DEVICE) -C $(AVRCONFIG)
 COMPILE = $(AVRBIN)/avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
 # symbolic targets:
-all:	$(OBJECTS).hex
+all:$(OBJECTS).hex
 
-.c.o:
-	$(COMPILE) -c $< -o $@
+.c.o:$(COMPILE) -c $< -o $@
 
-.S.o:
-	$(COMPILE) -x assembler-with-cpp -c $< -o $@
+.S.o:$(COMPILE) -x assembler-with-cpp -c $< -o $@
 # "-x assembler-with-cpp" should not be necessary since this is the default
 # file type for the .S (with capital S) extension. However, upper case
 # characters are not always preserved on Windows. To ensure WinAVR
 # compatibility define the file type manually.
 
-.c.s:
-	$(COMPILE) -S $< -o $@
+.c.s:$(COMPILE) -S $< -o $@
 
-flash:	all
-	$(AVRDUDE) -U flash:w:$(OBJECTS).hex:i
+flash:  all
+        $(AVRDUDE) -U flash:w:$(OBJECTS).hex:i
 
 fuse:
-	$(AVRDUDE) $(FUSES)
+        $(AVRDUDE) $(FUSES)
 
 # Xcode uses the Makefile targets "", "clean" and "install"
 install: flash fuse
 
 # if you use a bootloader, change the command below appropriately:
 load: all
-	bootloadHID $(OBJECTS).hex
+        bootloadHID $(OBJECTS).hex
 
 clean:
-	rm -f $(OBJECTS).hex $(OBJECTS).elf $(OBJECTS).o
+        rm -f $(OBJECTS).hex $(OBJECTS).elf $(OBJECTS).o
 
 # file targets:
 $(OBJECTS).elf: $(OBJECTS).o
-	$(COMPILE) -o $(OBJECTS).elf $(OBJECTS).o
+        $(COMPILE) -o $(OBJECTS).elf $(OBJECTS).o
 
 $(OBJECTS).hex: $(OBJECTS).elf
-	rm -f $(OBJECTS).hex
-	$(AVRBIN)/avr-objcopy -j .text -j .data -O ihex $(OBJECTS).elf $(OBJECTS).hex
-	$(AVRBIN)/avr-size --format=avr --mcu=$(DEVICE) $(OBJECTS).elf
+        rm -f $(OBJECTS).hex
+        $(AVRBIN)/avr-objcopy -j .text -j .data -O ihex $(OBJECTS).elf $(OBJECTS).hex
+        $(AVRBIN)/avr-size --format=avr --mcu=$(DEVICE) $(OBJECTS).elf
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.
 
 # Targets for code debugging and analysis:
 disasm:	$(OBJECTS).elf
-	avr-objdump -d $(OBJECTS).elf
+        avr-objdump -d $(OBJECTS).elf
 
 cpp:
-	$(COMPILE) -E $(OBJECTS).c
+        $(COMPILE) -E $(OBJECTS).c

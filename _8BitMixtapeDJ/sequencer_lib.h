@@ -10,15 +10,20 @@ typedef struct
     unsigned char last;
 } seq_sequence;
 
-#define SEQUENCE_LENGTH 4
+#define SEQUENCE_LENGTH 8
 
 seq_sequence SEQUENCER[SEQUENCE_LENGTH] =
 {
     //sustain, freq, last?
-    { 5000, 100, 0},
-    { 5000, 200, 0},
-    { 5000, 100, 0},
-    { 5000, 200, 1},
+    { 4000, 20, 0},
+    { 1000, 200, 0},
+    { 4000, 20, 0},
+    { 1000, 200, 0},
+    { 1000, 200, 0},
+    { 1000, 200, 0},
+    { 1000, 200, 0},
+    { 1000, 200, 1},
+
 };
 
 volatile unsigned int tempo_time = 0; //in ms
@@ -57,7 +62,7 @@ void seq_update_state()
             if(remaining_sequence_time > 0)
                 {
                     remaining_sequence_time--;
-                }else if(sound_generator_on){
+                }else if(sound_generator_on > 0){
                     //printf("stop freq\n");
                     sound_generator_on = 0;
                 }

@@ -5,8 +5,7 @@
 typedef struct
 {
     unsigned int duration;
-    unsigned char freq;
-    unsigned char last;
+    unsigned int freq;
 } seq_sequence;
 
 typedef struct

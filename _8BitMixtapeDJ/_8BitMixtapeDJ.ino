@@ -35,9 +35,9 @@ volatile uint8_t pot2; // 0...255
 seq_sequence sequencer1_sequence[SEQUENCER1_LENGTH] =
 {
     //sustain, freq
-    { 4000, 20},
+    { 4000, 200},
     { 1000, 200},
-    { 4000, 20},
+    { 4000, 200},
     { 1000, 200},
     { 1000, 200},
     { 1000, 200},
@@ -285,7 +285,7 @@ ISR(TIMER1_COMPA_vect)
        if(pot2_val< 10 ) pot2_val = 10;
    //sei();
 
-   //seq_set_tempo(&sequencer1,rate << 6);
+   seq_set_tempo(&sequencer1,pot1_val << 6);
 
 
 //    if(pot2_val >= 127)

@@ -14,7 +14,7 @@ volatile uint8_t hw_adc2 = _BV(ADLAR) | _BV(MUX1); //PB4-ADC2 pot1
 //                         GND  4|    |5   PB0  (D  0)        pwm0 ====> OCR0A / sound output
 //                               +----+
 
-void hw_set_output_pin()
+static inline void hw_set_output_pin()
 {
     //DDRB |= 1<<DDB4; //set PB4 as output
     //PORTB &= ~(1 << PB4); //set PB4 output 0
@@ -27,7 +27,7 @@ void hw_set_output_pin()
 
 }
 
-void hw_set_timer1()
+static inline void hw_set_timer1()
 {
 
     //TIMER SETUP [leave this settings]
@@ -59,20 +59,20 @@ void hw_set_timer1()
 }
 
 
-void hw_disable_timer0()
+static inline void hw_disable_timer0()
 {
     //Writing the TSM bit to one activates the Timer/Counter Synchronization Mode. In this mode,
     //the value written to PSR0 is kept, hence keeping the Prescaler Reset signal asserted
     GTCCR |= _BV(TSM) | _BV(PSR0);
 }
 
-void hw_enable_timer0()
+static inline void hw_enable_timer0()
 {
     //When the TSM bit is written to zero, the PSR0 bit is cleared by hardware, and the timer/counter start counting.
     GTCCR &= ~_BV(TSM);
 }
 
-void hw_setup_timer0_pwm()
+static inline void hw_setup_timer0_pwm()
 {
     //PWM SOUND OUTPUT MODE [change this]
     TCCR0A |= (1<<WGM00)|(1<<WGM01); //Fast pwm
@@ -86,7 +86,7 @@ void hw_setup_timer0_pwm()
     TCCR0B = 0<<WGM02 | 1<<CS00;
 }
 
-void hw_adc_init()
+static inline void hw_adc_init()
 {
     ADCSRA |= _BV(ADIE); //adc interrupt enable
     ADCSRA |= _BV(ADEN); //adc enable
@@ -96,14 +96,14 @@ void hw_adc_init()
     ADCSRB = 0;
 }
 
-void hw_adc_start()
+static inline void hw_adc_start()
 {
     ADCSRA |= _BV(ADSC); //start adc conversion
 }
 
 
 
-void hw_init()
+static inline void hw_init()
 {
     //no prescale
     clock_prescale_set(clock_div_1);

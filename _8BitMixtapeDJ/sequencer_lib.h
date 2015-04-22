@@ -22,6 +22,10 @@ typedef struct
 } seq_instance;
 
 
+seq_sequence * seq_get_current_step(seq_instance * seq_instance)
+{
+    return &seq_instance->sequencer[seq_instance->next_step_index];
+}
 
 void seq_set_current_step(seq_instance * seq_instance, int index)
 {

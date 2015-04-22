@@ -4,6 +4,16 @@
 volatile uint8_t hw_adc1 = _BV(ADLAR) | _BV(MUX0); //PB2-ADC1 pot2
 volatile uint8_t hw_adc2 = _BV(ADLAR) | _BV(MUX1); //PB4-ADC2 pot1
 
+
+// ATTINY85 8BitMixtapeDj pin
+//
+//                               +-\/-+
+//  Ain0           (D  5)  PB5  1|    |8   VCC
+//  Ain3           (D  3)  PB3  2|    |7   PB2  (D  2)  INT0  Ain1 ====> pot2
+// pot1 ===> Ain2  (D  4)  PB4  3|    |6   PB1  (D  1)        pwm1
+//                         GND  4|    |5   PB0  (D  0)        pwm0 ====> OCR0A / sound output
+//                               +----+
+
 void hw_set_output_pin()
 {
     //DDRB |= 1<<DDB4; //set PB4 as output

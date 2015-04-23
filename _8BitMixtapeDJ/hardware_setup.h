@@ -29,8 +29,19 @@ static inline void hw_set_output_pin()
     PORTB &= ~(1 << PB0); //set PB0 output 0
 
 
-    debounce_init();
+    btn_debounce_init();
 
+}
+
+void hw_enable_timer1()
+{
+    TCNT1 = 0; //reset counter
+    TCCR1 |= _BV(CS10)|_BV(CS12); // prescale 16
+}
+
+void hw_disable_timer1()
+{
+    TCCR1 ^= (_BV(CS10)|_BV(CS12)); // prescale 16
 }
 
 static inline void hw_set_timer1()
@@ -44,7 +55,7 @@ static inline void hw_set_timer1()
 
     TCCR1 |= _BV(CTC1); //clear timer on compare
     TIMSK |= _BV(OCIE1A); //activate compare interruppt A
-    //TIMSK |= _BV(OCIE1B); //activate compare interruppt B
+    TIMSK |= _BV(OCIE1B); //activate compare interruppt B
 
     TCNT1 = 0; //init count
 

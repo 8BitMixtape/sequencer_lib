@@ -20,9 +20,9 @@
     low = ~(low & mask);                \
     high = low ^ (high & mask);         \
 
-volatile uint8_t buttons_down;
+volatile uint8_t btn_buttons_down;
 
-static inline void debounce (void){
+static inline void btn_debounce (void){
 
     static uint8_t vcount_low = 0xFF, vcount_high = 0xFF;
     static uint8_t button_state = 0;
@@ -33,23 +33,23 @@ static inline void debounce (void){
     state_changed &= vcount_low & vcount_high;
     button_state  ^= state_changed;
 
-    buttons_down |= button_state & state_changed;
+    btn_buttons_down |= button_state & state_changed;
 
 }
 
-uint8_t button_down(uint8_t button_mask)
+uint8_t btn_button_down(uint8_t button_mask)
 {
     //cli();
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
-        button_mask &= buttons_down;
-        buttons_down ^= button_mask;
+        button_mask &= btn_buttons_down;
+        btn_buttons_down ^= button_mask;
     }
     //sei();
 
     return button_mask;
 }
 
-static inline void debounce_init()
+static inline void btn_debounce_init()
 {
     BUTTON_DDR  &= ~(BUTTON_MASK);
     BUTTON_PORT |= BUTTON_MASK;

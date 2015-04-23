@@ -19,11 +19,14 @@ static inline void hw_set_output_pin()
     //DDRB |= 1<<DDB4; //set PB4 as output
     //PORTB &= ~(1 << PB4); //set PB4 output 0
 
-    DDRB |= 1<<DDB1; //set PB1 as output
-    PORTB &= ~(1 << PB1); //set PB1 output 0
+    //DDRB |= 1<<DDB1; //set PB1 as output
+    //PORTB &= ~(1 << PB1); //set PB1 output 0
 
     DDRB |= 1<<DDB0; //set PB0 as output
     PORTB &= ~(1 << PB0); //set PB0 output 0
+
+
+    debounce_init();
 
 }
 

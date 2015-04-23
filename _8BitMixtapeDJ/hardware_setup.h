@@ -1,6 +1,9 @@
 #ifndef HARDWARE_SETUP
 #define HARDWARE_SETUP
 
+#include "debounce_lib.h"
+
+
 volatile uint8_t hw_adc1 = _BV(ADLAR) | _BV(MUX0); //PB2-ADC1 pot2
 volatile uint8_t hw_adc2 = _BV(ADLAR) | _BV(MUX1); //PB4-ADC2 pot1
 

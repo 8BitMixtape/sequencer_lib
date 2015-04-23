@@ -72,7 +72,9 @@ int main(void)
     //enter sequencing mode disable sequencer interrupt
     //TIMSK ^= _BV(OCIE1A);
 
-    while(1)
+
+    //based on https://www.tty1.net/blog/2008/avr-gcc-optimisations_en.html
+    for(;;)
         {
             /*
             uint8_t btn1_now = button_is_pressed(PINB, PB1);
@@ -127,6 +129,7 @@ ISR(TIMER1_COMPB_vect)
             btn_debounce();
             slower_interval = 0;
         }
+
 
 
 }

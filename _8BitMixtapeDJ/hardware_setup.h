@@ -37,9 +37,14 @@ static inline void hw_set_timer1()
 {
 
     //TIMER SETUP [leave this settings]
+    //When the CTC1 control bit is set (one), Timer/Counter1 is reset to $00 in the CPU clock cycle after a compare match with OCR1C register value.
+    //If the control bit is cleared,
+    //Timer/Counter1 continues counting and is
+    //unaffected by a compare match.
+
     TCCR1 |= _BV(CTC1); //clear timer on compare
-    TIMSK |= _BV(OCIE1A); //activate compare interruppt
-    TIMSK |= _BV(OCIE1B); //activate compare interruppt
+    TIMSK |= _BV(OCIE1A); //activate compare interruppt A
+    //TIMSK |= _BV(OCIE1B); //activate compare interruppt B
 
     TCNT1 = 0; //init count
 
@@ -53,13 +58,14 @@ static inline void hw_set_timer1()
     //TCCR1 |= _BV(CS13); // prescale 128
     //TCCR1 |= _BV(CS10) | _BV(CS13); // prescale 256
 
+    //When the CTC1 control bit is set (one), Timer/Counter1 is reset to $00 in the CPU clock cycle after a compare match with OCR1C register value
     OCR1C = 100;
     //OCR1B = 22;
 
-    //OCR1C = 125;  // (16000000/16)/8000 = 128
-    //OCR1C = 90; // (16000000/16)/11025 = 90
-    //OCR1C = 45; // (16000000/16)/22050 = 45
-    //OCR1C = 22; // (16000000/16)/44100 = 22
+    //OCR1C = 125;  // (16000000/16)/8000 = 125
+    //OCR1C = 90;   // (16000000/16)/11025 = 90
+    //OCR1C = 45;   // (16000000/16)/22050 = 45
+    //OCR1C = 22;   // (16000000/16)/44100 = 22
 
 
 }

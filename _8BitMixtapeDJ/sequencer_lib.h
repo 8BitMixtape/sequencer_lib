@@ -32,7 +32,7 @@ void seq_set_current_step(seq_instance * seq_instance, int index)
     seq_instance->next_step_index  = index;
     seq_instance->remaining_sequence_time = seq_instance->sequencer[index].duration;
     seq_instance->remaining_tempo_time = seq_instance->tempo_time; // restart tempo //SEQUENCER[next_step_index].duration;
-    seq_instance->sound_generator_on = 1;
+    //seq_instance->sound_generator_on = 1;
     //printf("--new sequence\n");
 }
 
@@ -53,25 +53,22 @@ void seq_update(seq_instance * seq_instance)
 
             if(seq_instance->remaining_sequence_time > 0)
                 {
+                    seq_instance->sound_generator_on = 1;
                     seq_instance->remaining_sequence_time--;
                 }
-            else if(seq_instance->sound_generator_on > 0)
+            else
                 {
-                    //printf("stop freq\n");
+                    //force sound generator off
                     seq_instance->sound_generator_on = 0;
                 }
         }
     else
         {
 
-            if (seq_instance->remaining_sequence_time > 0)
-                {
-                    seq_instance->sound_generator_on = 0;
-                    //printf("force stop freq");
-                }
-
+            seq_instance->sound_generator_on = 0;
+            //printf("force stop freq");
             seq_set_current_step(seq_instance, (seq_instance->next_step_index+1) % seq_instance->sequencer_length);
-            seq_instance->remaining_tempo_time--;
+            //seq_instance->remaining_tempo_time--;
         }
 
 }

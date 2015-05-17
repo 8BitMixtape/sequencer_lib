@@ -2,7 +2,7 @@ sequencer_lib
 ===================
 
 
-Generic step sequencer library for AVR/C synthesizer
+Generic step sequencer library for AVR/C based synthesizer
 
 ![stepseq](https://raw.githubusercontent.com/8BitMixtape/8BitMixtapeDJ/seqlib/step_sequencer.png)
 

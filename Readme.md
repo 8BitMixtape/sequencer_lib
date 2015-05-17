@@ -104,3 +104,20 @@ Sequencer running on 8 Khz timer
      seq_update_time(&SEQUENCER_1);
 
 
+Extra
+-------------
+
+Customize pattern data struct, put this before including sequencer_lib
+
+    #define CUSTOM_PATTERN_STRUCT
+    
+    typedef struct
+    {
+        unsigned int sustain;
+        unsigned int freq;
+        unsigned int freq1;
+        unsigned int freq2;
+
+    } seq_pattern;
+
+     #include <sequencer_lib.h>

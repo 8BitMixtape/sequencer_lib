@@ -47,9 +47,13 @@ Sequencer running on 8 Khz timer
 
 **1.Declare sequencer instance variable**
 
+    #include <sequencer_lib.h>
+
+**2.Declare sequencer instance variable**
+
     seq_instance SEQUENCER_1;
     
-**2.Declare sequencer stage length and array (max length 255)**
+**3.Declare sequencer stage length and array (max length 255)**
     
     #define   SEQUENCER1_PATTERN_LENGTH 8
     
@@ -66,11 +70,11 @@ Sequencer running on 8 Khz timer
         { 6000, 200}, //8
     };
 
-**3. Call init sequencer**
+**4. Call init sequencer**
 
     seq_init(&SEQUENCER_1, SEQUENCER_1_PATTERN_ARRAY, SEQUENCER1_PATTERN_LENGTH, 10000);
 
-**4. Play Sound and Update Sequencer time**
+**5. Play Sound and Update Sequencer time**
 
     ISR(TIMER1_COMPA_vect) //e.g. 8 Khz Timer
     {

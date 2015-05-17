@@ -11,7 +11,7 @@
 
 #include "hardware_setup.h"
 #include "debounce_lib.h"
-#include "sequencer_lib.h"
+#include "../../../include/sequencer_lib.h"
 
 
 volatile unsigned long T_START = 40000;
@@ -42,8 +42,8 @@ uint8_t start_sequencer = 0;
 
 seq_instance SEQUENCER_1;
 
-#define   SEQUENCER1_STAGE_LENGTH 8
-seq_stage SEQUENCER_1_STAGE_ARRAY[SEQUENCER1_STAGE_LENGTH] =
+#define   SEQUENCER1_PATTERN_LENGTH 8
+seq_pattern SEQUENCER_1_PATTERN_ARRAY[SEQUENCER1_PATTERN_LENGTH] =
 {
     //sustain, freq
     { 6000, 200}, //1
@@ -60,7 +60,7 @@ seq_stage SEQUENCER_1_STAGE_ARRAY[SEQUENCER1_STAGE_LENGTH] =
 void setup_sequencer()
 {
     //init with sequencer instance, sequencer stage array, sequencer stage length, default tempo
-    seq_init(&SEQUENCER_1, SEQUENCER_1_STAGE_ARRAY, SEQUENCER1_STAGE_LENGTH, 10000);
+    seq_init(&SEQUENCER_1, SEQUENCER_1_PATTERN_ARRAY, SEQUENCER1_PATTERN_LENGTH, 10000);
 }
 
 void update_sound(uint8_t song_id)
@@ -68,44 +68,44 @@ void update_sound(uint8_t song_id)
     switch (song_id)
     {
         case 0:
-        snd = (t*(5+(pot1/5))&t>>7)|(t*3&t>>(10-(seq_get_current_stage(&SEQUENCER_1)->freq/5)));
+        snd = (t*(5+(pot1/5))&t>>7)|(t*3&t>>(10-(seq_get_current_pattern(&SEQUENCER_1)->freq/5)));
         break;
 
         case 1:
-        snd = (t|(t>>(9+(pot1/2))|t>>7))*t&(t>>(11+(seq_get_current_stage(&SEQUENCER_1)->freq/2))|t>>9);
+        snd = (t|(t>>(9+(pot1/2))|t>>7))*t&(t>>(11+(seq_get_current_pattern(&SEQUENCER_1)->freq/2))|t>>9);
         break;
 
         case 2:
-        snd = (t*9&t>>4|t*5&t>>(7+(pot1/2))|t*3&t/(1024-(seq_get_current_stage(&SEQUENCER_1)->freq/2)))-1;
+        snd = (t*9&t>>4|t*5&t>>(7+(pot1/2))|t*3&t/(1024-(seq_get_current_pattern(&SEQUENCER_1)->freq/2)))-1;
         break;
 
         case 3:
-        snd = (t>>6|t|t>>(t>>(16-(pot1/2))))*10+((t>>11)&(7+(seq_get_current_stage(&SEQUENCER_1)->freq/2)));
+        snd = (t>>6|t|t>>(t>>(16-(pot1/2))))*10+((t>>11)&(7+(seq_get_current_pattern(&SEQUENCER_1)->freq/2)));
         break;
 
         case 4:
-        snd = t*(((t>>(11-(seq_get_current_stage(&SEQUENCER_1)->freq/2)))&(t>>8))&((123-pot1)&(t>>3)));
+        snd = t*(((t>>(11-(seq_get_current_pattern(&SEQUENCER_1)->freq/2)))&(t>>8))&((123-pot1)&(t>>3)));
         break;
 
         case 5:
-        snd = t*(t^t+(t>>15|1)^(t-(1280-(pot1/2))^t)>>(10-(seq_get_current_stage(&SEQUENCER_1)->freq/5)));
+        snd = t*(t^t+(t>>15|1)^(t-(1280-(pot1/2))^t)>>(10-(seq_get_current_pattern(&SEQUENCER_1)->freq/5)));
         break;
 
         case 6:
-        snd = t * ((pot1>>12|t>>8)&seq_get_current_stage(&SEQUENCER_1)->freq&t>>4);
+        snd = t * ((pot1>>12|t>>8)&seq_get_current_pattern(&SEQUENCER_1)->freq&t>>4);
         //snd = (t*t/(256-pot1))&(t>>((t/(1024-seq_get_current_step(&sequencer1)->freq))%16))^t%64*(0xC0D3DE4D69>>(t>>9&30)&t%32)*t>>18;
         break;
 
         case 7:
-        snd = (t&t>>(12+(pot1/2)))*(t>>4|t>>(8-(seq_get_current_stage(&SEQUENCER_1)->freq/2)))^t>>6;
+        snd = (t&t>>(12+(pot1/2)))*(t>>4|t>>(8-(seq_get_current_pattern(&SEQUENCER_1)->freq/2)))^t>>6;
         break;
 
         case 8:
-        snd = t*(((t>>9)^((t>>9)-(1+(pot1/2)))^1)%(13+(seq_get_current_stage(&SEQUENCER_1)->freq/2)));
+        snd = t*(((t>>9)^((t>>9)-(1+(pot1/2)))^1)%(13+(seq_get_current_pattern(&SEQUENCER_1)->freq/2)));
         break;
 
         case 9:
-        snd = t*(((t>>(12+(pot1/2)))|(t>>8))&((63-(seq_get_current_stage(&SEQUENCER_1)->freq/2))&(t>>4)));
+        snd = t*(((t>>(12+(pot1/2)))|(t>>8))&((63-(seq_get_current_pattern(&SEQUENCER_1)->freq/2))&(t>>4)));
         break;
 
     }
@@ -143,7 +143,7 @@ int main(void)
                 {
                     //ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
                     //{
-                    SEQUENCER_1_STAGE_ARRAY[button_step_index].freq = pot1;
+                    SEQUENCER_1_PATTERN_ARRAY[button_step_index].freq = pot1;
                     //sequencer1_sequence[button_step_index].duration = pot1 << 6;
                     //}
                 }
@@ -168,7 +168,7 @@ int main(void)
     //                //set sequence mode
                         button_step_index++;
 
-                        seq_goto_stage(&SEQUENCER_1, button_step_index);
+                        seq_goto_pattern(&SEQUENCER_1, button_step_index);
 
                         if(button_step_index > 7)
                             {
@@ -274,7 +274,7 @@ ISR(TIMER1_COMPA_vect)
     else
         {
 
-            if(t>(SEQUENCER_1.sequencer_stage_array[button_step_index].sustain + T_START))
+            if(t>(SEQUENCER_1.sequencer_pattern_array[button_step_index].sustain + T_START))
                 {
                     t = T_START;
                 }

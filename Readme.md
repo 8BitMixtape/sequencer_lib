@@ -51,9 +51,9 @@ Sequencer running on 8 Khz timer
     
 **2.Declare sequencer stage length and array (max length 255)**
     
-    #define   SEQUENCER1_STAGE_LENGTH 8
+    #define   SEQUENCER1_PATTERN_LENGTH 8
     
-    seq_stage SEQUENCER_1_STAGE_ARRAY[SEQUENCER1_STAGE_LENGTH] =
+    seq_pattern SEQUENCER_1_PATTERN_ARRAY[SEQUENCER1_PATTERN_LENGTH] =
     {
         //sustain, freq, stage index
         { 6000, 200}, //1
@@ -68,7 +68,7 @@ Sequencer running on 8 Khz timer
 
 **3. Call init sequencer**
 
-    seq_init(&SEQUENCER_1, SEQUENCER_1_STAGE_ARRAY, SEQUENCER1_STAGE_LENGTH, 10000);
+    seq_init(&SEQUENCER_1, SEQUENCER_1_PATTERN_ARRAY, SEQUENCER1_PATTERN_LENGTH, 10000);
 
 **4. Play Sound and Update Sequencer time**
 
@@ -79,7 +79,7 @@ Sequencer running on 8 Khz timer
     
         if(SEQUENCER_1.sound_generator_on > 0)
             {
-		        uint8_t freq = seq_get_current_stage(&SEQUENCER_1)->freq;
+		        uint8_t freq = seq_get_current_pattern(&SEQUENCER_1)->freq;
                 snd = t * ((10>>12|t>>8)&freq&t>>4);
                 OCR0A = snd;
                 t++;

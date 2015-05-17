@@ -4,7 +4,7 @@ sequencer_lib
 
 Generic step sequencer library for AVR/C synthesizer
 
-https://raw.githubusercontent.com/8BitMixtape/8BitMixtapeDJ/seqlib/step_sequencer.png
+![stepseq](https://raw.githubusercontent.com/8BitMixtape/8BitMixtapeDJ/seqlib/step_sequencer.png)
 
 ----------
 

@@ -1,11 +1,16 @@
 #ifndef SEQUENCER_LIB
 #define SEQUENCER_LIB
 
+
+#ifndef CUSTOM_PATTERN_STRUCT
+
 typedef struct
 {
     unsigned int sustain;
     unsigned int freq;
 } seq_pattern;
+
+#endif
 
 typedef struct
 {

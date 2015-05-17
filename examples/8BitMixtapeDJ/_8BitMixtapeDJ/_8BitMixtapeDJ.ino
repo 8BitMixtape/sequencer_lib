@@ -11,7 +11,7 @@
 
 #include "hardware_setup.h"
 #include "debounce_lib.h"
-#include "../../../include/sequencer_lib.h"
+#include <sequencer_lib.h>
 
 
 volatile unsigned long T_START = 40000;

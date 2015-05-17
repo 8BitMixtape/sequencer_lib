@@ -14,18 +14,31 @@ Api
     typedef struct
     {
         unsigned int sustain;
-        unsigned int freq;  //add more variable here
-    } seq_stage;
+        unsigned int freq;
+    } seq_pattern;
 
-    seq_stage * seq_get_current_stage(seq_instance * seq_instance)
+    typedef struct
+    {
+        volatile unsigned char current_pattern_index;
+        volatile unsigned char sound_generator_on;
+        volatile unsigned int  tempo_time; //in tick
+        volatile unsigned int  remaining_tempo_time;
+        volatile unsigned int  remaining_sustain_time;
+        seq_pattern *     sequencer_pattern_array;
+        unsigned char   sequencer_pattern_array_length;
+    } seq_instance;
 
-    void seq_goto_stage(seq_instance * seq_instance, int index)
+
+    seq_pattern * seq_get_current_pattern(seq_instance * seq_instance)
+
+    void seq_goto_pattern(seq_instance * seq_instance, int index)
 
     void seq_set_tempo(seq_instance * seq_instance, unsigned int tempo)
 
     void seq_update_time(seq_instance * seq_instance)
 
-    void seq_init(seq_instance * seq_instance, seq_stage * seq_sequence_p, unsigned char  sequencer_length, unsigned int tempo)
+    void seq_init(seq_instance * seq_instance, seq_pattern * seq_sequence_p, unsigned char  sequencer_length, unsigned int tempo)
+
 
 
 Example Usage

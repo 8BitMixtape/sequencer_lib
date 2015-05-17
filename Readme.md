@@ -45,7 +45,7 @@ Example Usage
 -------------
 Sequencer running on 8 Khz timer
 
-**1.Declare sequencer instance variable**
+**1.include sequencer lib**
 
     #include <sequencer_lib.h>
 

@@ -40,6 +40,12 @@ Api
     void seq_init(seq_instance * seq_instance, seq_pattern * seq_sequence_p, unsigned char  sequencer_length, unsigned int tempo)
 
 
+Installation
+-------------
+1. Download repo
+2. Extract the zip file
+3. Move the "sequencer_lib" folder that has been extracted to your Arduino libraries directory.
+
 
 Example Usage
 -------------

@@ -20,7 +20,7 @@
 
 #include "hardware_setup.h"
 
-
+//START DDS STUFF
 
 // table of 256 sine values / one sine period / stored in flash memory
 PROGMEM  prog_uchar sine256[]  = {
@@ -32,23 +32,23 @@ PROGMEM  prog_uchar sine256[]  = {
 
 };
 
-
 double dfreq;
 // const double refclk=31372.549;  // =16MHz / 510  http://playground.arduino.cc/Main/TimerPWMCheatsheet
 const double refclk=32258.064;      // measured
-
 // variables used inside interrupt service declared as voilatile
 volatile uint8_t icnt;              // var inside interrupt
-
-volatile uint8_t icnt1;             // var inside interrupt
 //volatile uint8_t c4ms;              // counter incremented all 4ms
 volatile unsigned long phaccu;   // pahse accumulator
 volatile unsigned long tword_m;  // dds tuning word m
 
+//END DDS STUFF
 
-/// StarT sequencer
-///
+
+//START SEQUENCER
+
 #include <sequencer_lib.h>
+
+volatile uint8_t icnt1; // var inside interrupt for sequencer timing
 
 seq_instance SEQUENCER_1;
 
@@ -74,7 +74,7 @@ static inline void setup_sequencer()
 }
 
 
-/// end sequencer
+//END SEQUENCER
 
 
 int main(void)
@@ -90,27 +90,21 @@ int main(void)
     //based on https://www.tty1.net/blog/2008/avr-gcc-optimisations_en.html
     for(;;)
         {
-           // if (c4ms > 250) {                 // timer / wait fou a full second
-                 //c4ms=0;
+
+            //seq_set_tempo(&SEQUENCER_1,pot1 << 6); //map 0-16320 play with tempo
+
             if(SEQUENCER_1.sound_generator_on > 0)
                 {
-                     dfreq=seq_get_current_pattern(&SEQUENCER_1)->freq; // read Poti to adjust output frequency from 0..1020 Hz
+                     dfreq=seq_get_current_pattern(&SEQUENCER_1)->freq; // set dfreq to SEQUENCER_1 current step FREQUENCY
                      tword_m=pow(2,32)*dfreq/refclk;  // calulate DDS new tuning word
                 }else{
                      tword_m = 0;
                 }
 
-                 //  }
         }
 
     return 0;   /* never reached */
 }
-
-
-////COMPB will be executed after COMPA
-//ISR(TIMER1_COMPB_vect)
-//{
-//}
 
 
 //PWM SUSTAIN TIMER

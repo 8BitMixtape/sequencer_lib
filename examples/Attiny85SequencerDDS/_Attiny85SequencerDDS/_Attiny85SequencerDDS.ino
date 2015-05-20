@@ -15,8 +15,6 @@
 #include <math.h>
 
 
-#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 
 #include "hardware_setup.h"
 

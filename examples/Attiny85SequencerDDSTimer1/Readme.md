@@ -4,7 +4,7 @@ Port from http://interface.khm.de/index.php/lab/interfaces-advanced/arduino-dds-
 
 
 
-> Using Attiny85 Timer1 as PWM with 64 Mhz carrier frequency http://www.technoblogy.com/show?QBB
+> Using Attiny85 Timer1 as PWM with 64  Mhz clock source  http://www.technoblogy.com/show?QBB
 
 
 

@@ -1,5 +1,0 @@
-build/Makefile
-_8BitMixtapeDJ/_8BitMixtapeDJ.ino
-../../sequencer_lib.h
-_8BitMixtapeDJ/hardware_setup.h
-_8BitMixtapeDJ/debounce_lib.h

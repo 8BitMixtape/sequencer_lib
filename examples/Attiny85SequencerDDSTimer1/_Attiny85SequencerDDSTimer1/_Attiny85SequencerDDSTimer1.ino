@@ -211,7 +211,9 @@ ISR(TIMER0_COMPA_vect)
     phaccu=phaccu+tword_m; // soft DDS, phase accu with 32 bits
     icnt=phaccu >> 24;     // use upper 8 bits for phase accu as frequency information
                            // read value fron ROM sine table and send to PWM DAC
-    OCR1A=pgm_read_byte_near(sine256 + icnt)>> (pot2 >> 5);
+                           
+    //                                          bitcrusher effect... 
+    OCR1A=pgm_read_byte_near(sine256 + icnt) >> (pot2 >> 5); //pot2 range 0..255 to 0..7
 
     if(icnt1++ >= 4) {  // 32.258 Hz / 4 = 8.064.5 Hz
       seq_update_time(&SEQUENCER_1);

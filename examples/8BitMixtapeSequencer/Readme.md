@@ -2,7 +2,7 @@
 
 Sequencer version of 8BitMixtape and example of sequencer_lib
 
-![stepseq](https://raw.githubusercontent.com/8BitMixtape/sequencer_lib/master/examples/8BitMixtapeDJ/breadboard_bb.png)
+![stepseq](https://raw.githubusercontent.com/8BitMixtape/sequencer_lib/master/examples/8BitMixtapeSequencer/breadboard_bb.png)
 
 ## Install
 
